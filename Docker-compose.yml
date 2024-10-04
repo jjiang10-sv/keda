@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+
+  manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: keda_manager:latest
+    container_name: keda_manager
+  adapter:
+    build:
+      context: .
+      dockerfile: Dockerfile.adapter
+    image: keda_adapter:latest
+    container_name: keda_adapter
+  webhooks:
+    build:
+      context: .
+      dockerfile: Dockerfile.webhooks
+    image: keda_webhook:latest
+    container_name: keda_webhook
+      
+
+ 

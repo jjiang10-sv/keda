@@ -301,8 +301,8 @@ deploy: install ## Deploy controller to the K8s cluster specified in ~/.kube/con
 
 	# Need this workaround to mitigate a problem with inserting labels into selectors,
 	# until this issue is solved: https://github.com/kubernetes-sigs/kustomize/issues/1009
-	@sed -i".out" -e 's@version:[ ].*@version: $(VERSION)@g' config/default/kustomize-config/metadataLabelTransformer.yaml
-	rm -rf config/default/kustomize-config/metadataLabelTransformer.yaml.out
+	# @sed -i".out" -e 's@version:[ ].*@version: $(VERSION)@g' config/default/kustomize-config/metadataLabelTransformer.yaml
+	# rm -rf config/default/kustomize-config/metadataLabelTransformer.yaml.out
 	$(KUSTOMIZE) build config/e2e | kubectl apply -f -
 
 undeploy: kustomize e2e-test-clean-crds ## Undeploy controller from the K8s cluster specified in ~/.kube/config.
