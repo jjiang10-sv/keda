@@ -201,12 +201,15 @@ func (s *PredictKubeScaler) GetMetricsAndActivity(ctx context.Context, metricNam
 		s.logger.Error(err, "error executing query to predict controller service")
 		return []external_metrics.ExternalMetricValue{}, false, err
 	}
-
+	// value = 100
+	// activationValue = 100
+	println("the predict value is ", value, activationValue)
 	if value == 0 {
 		s.logger.V(1).Info("empty response after predict request")
 		return []external_metrics.ExternalMetricValue{}, false, nil
 	}
-
+	
+	
 	s.logger.V(1).Info(fmt.Sprintf("predict value is: %f", value))
 
 	metric := GenerateMetricInMili(metricName, value)

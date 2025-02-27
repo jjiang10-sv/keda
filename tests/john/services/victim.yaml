@@ -1,0 +1,68 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: sampletest
+#   labels:
+#     app: sampletest
+#   namespace: keda
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: sampletest
+#   template:
+#     metadata:
+#       labels:
+#         app: sampletest
+#     spec:
+#       containers:
+#       - name: sampletest
+#         image: 19860314/testservice:latest
+#         ports:
+#         - containerPort: 8080 
+#         resources:
+#           requests:
+#             memory: "128Mi"
+#             cpu: "100m"
+#           limits:
+#             memory: "256Mi"
+#             cpu: "200m"
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sampletest
+  name: sampletest
+  #namespace: keda
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sampletest
+  template:
+    metadata:
+      labels:
+        app: sampletest
+    spec:
+      containers:
+        - name: sampletest
+          image: 19860314/testservice:latest
+          ports:
+            - containerPort: 8080
+          
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sampletest
+  #namespace: keda
+spec:
+  selector:
+    app: sampletest
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP  # or ClusterIP/NodePort based on your requirement

@@ -1,0 +1,1 @@
+kubectl create secret generic predictkube-secrets --from-file=apiKey=predictkube-api-key.txt

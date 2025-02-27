@@ -1,0 +1,10 @@
+#base64 -i keda/tests/john/predictkube-api-key.txt
+# echo -n "username" | base64
+apiVersion: v1
+kind: Secret
+metadata:
+  name: predictkube-secrets
+  namespace: intersoul
+type: Opaque
+data:
+  apiKey: ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmhkV1FpT2lKaGRYUnZaMlZ1WlhKaGRHVmtMVFE1SWl3aWFYTnpJam9pTjJVd056VXdPV1V0TmpjeFpDMHhNV1ZqTFdGaFl6VXRZV05rWlRRNE1EQXhNVEl5SW4wLk5Cb0FaYUw5QVl2QW5zRkpiQU41THpVRG1rMW5oVXNmbFVTVDdvMUJacHlHcE9nRENtNUxGMG4zOUxQRVVFUTV3NGhhVkxuMF9WbmhpTGgwSGMzYjl3

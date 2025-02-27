@@ -82,6 +82,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.9.0
 	github.com/tidwall/gjson v1.17.1
+	github.com/tsenart/vegeta/v12 v12.11.1
 	github.com/xhit/go-str2duration/v2 v2.1.0
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a
 	go.etcd.io/etcd/client/v3 v3.5.13
@@ -113,6 +114,11 @@ require (
 	sigs.k8s.io/controller-tools v0.14.0
 	sigs.k8s.io/custom-metrics-apiserver v1.28.1-0.20240425173932-1a855fe8c789
 	sigs.k8s.io/kustomize/kustomize/v5 v5.4.1
+)
+
+require (
+	github.com/influxdata/tdigest v0.0.1 // indirect
+	github.com/rs/dnscache v0.0.0-20211102005908-e0241e321417 // indirect
 )
 
 // Remove this when they merge the PR and cut a release https://github.com/open-policy-agent/cert-controller/pull/202

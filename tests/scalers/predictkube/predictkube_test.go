@@ -6,7 +6,6 @@ package predictkube_test
 import (
 	"encoding/base64"
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/joho/godotenv"
@@ -33,9 +32,10 @@ var (
 	scaledObjectName     = fmt.Sprintf("%s-so", testName)
 	secretName           = fmt.Sprintf("%s-secret", testName)
 	prometheusServerName = fmt.Sprintf("%s-server", testName)
-	predictkubeAPIKey    = os.Getenv("PREDICTKUBE_API_KEY")
-	minReplicaCount      = 0
-	maxReplicaCount      = 2
+	//predictkubeAPIKey    = os.Getenv("PREDICTKUBE_API_KEY")
+	predictkubeAPIKey = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhdXRvZ2VuZXJhdGVkLTQ2IiwiaXNzIjoiNzg3Yjk5MWUtNjcxZC0xMWVjLWFhYzUtYWNkZTQ4MDAxMTIyIn0.NLXNTSjfda-waaqmVMJFpbuJjhBMWERXuB7KHQkUvOICHShb13dHO4vk1FwfCEcrv53tNDFQEQCczfTXCEaDLA"
+	minReplicaCount   = 0
+	maxReplicaCount   = 2
 )
 
 type templateData struct {

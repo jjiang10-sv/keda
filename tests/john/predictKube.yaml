@@ -1,0 +1,55 @@
+
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth-predictkube-secret
+  namespace: intersoul
+spec:
+  secretTargetRef:
+  - parameter: apiKey
+    name: predictkube-secrets
+    key: apiKey
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: aggregation-service-scaler
+  namespace: intersoul
+spec:
+  scaleTargetRef:
+    apiVersion:    apps/v1        # Optional. Default: apps/v1
+    kind:          Deployment     # Optional. Default: Deployment
+    name:          aggregation-service      # Mandatory. Must be in the same namespace as the ScaledObject
+  pollingInterval: 3
+  cooldownPeriod: 3
+  minReplicaCount: 1
+  maxReplicaCount: 3
+  triggers:
+  # - type: predictkube
+  #   metadata:
+  #     predictHorizon: "2h"
+  #     historyTimeWindow: "3d"  # We recomend to use minimum 7-14 days time window as historical data
+  #     prometheusAddress: http://kube-prometheus-stack-prometheus.monitoring:9090
+  #     #prometheusAddress: http://a1e41beb870ec425daedcb8253afa1de-1397416898.us-west-1.elb.amazonaws.com:9090
+  #     #query: sum(irate(kong_http_requests_total{status=~"200|202|204"}[2m]))
+  #     # query: sum(irate(kong_http_requests_total{status=~"2[0-9][0-9]|300"}[2m]))
+  #     # query: sum(irate(kong_http_requests_total{status=~"303"}[2m]))
+  #     query: sum(irate(http_requests_total{pod=~"aggregation-service-.*"}[2m]))
+  #     #query: sum(irate(kong_http_requests_total[2m])) 
+  #     queryStep: "2m" # Note: query step duration for range prometheus queries
+  #     threshold: '50.50' # Value to start scaling for
+  #     activationThreshold: '3.5'
+  #   authenticationRef:
+  #     name: keda-trigger-auth-predictkube-secret
+  - type: prometheus
+    metadata:
+      # Required fields:
+      serverAddress: http://kube-prometheus-stack-prometheus.monitoring:9090
+      #serverAddress: http://localhost:9090
+      #serverAddress: http://a1e41beb870ec425daedcb8253afa1de-1397416898.us-west-1.elb.amazonaws.com:9090
+      query: sum(rate(http_requests_total{deployment="aggregation-service"}[2m])) # Note: query must return a vector/scalar single element response
+      #Use Case: rate is better for smooth, long-term trends, while irate is useful for capturing short-term, rapid changes or spikes.
+      #query: sum(irate(kong_http_requests_total[2m])) 
+      #query: sum(rate(kong_http_requests_total[2m])) 
+      threshold: '50.50'
+      activationThreshold: '5.5'

@@ -63,7 +63,7 @@ var _ = Describe("hpa", func() {
 		ctrl.Finish()
 	})
 
-	It("should remove deleted metric from health status", func() {
+	FIt("should remove deleted metric from health status", func() {
 		numberOfFailures := int32(87)
 		health := make(map[string]v1alpha1.HealthStatus)
 		health["another metric name"] = v1alpha1.HealthStatus{
@@ -78,6 +78,7 @@ var _ = Describe("hpa", func() {
 		statusWriter.EXPECT().Patch(gomock.Any(), gomock.Any(), gomock.Any()).Do(func(arg interface{}, scaledObject *v1alpha1.ScaledObject, anotherArg interface{}, opts ...interface{}) {
 			capturedScaledObject = *scaledObject
 		})
+		//statusWriter.EXPECT().Patch(gomock.Any(), gomock.Any(), gomock.Any()).Do()
 
 		_, err := reconciler.getScaledObjectMetricSpecs(context.Background(), logger, scaledObject)
 

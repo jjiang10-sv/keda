@@ -18,6 +18,7 @@ package keda
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"testing"
 	"time"
@@ -56,6 +57,10 @@ func TestAPIs(t *testing.T) {
 	RunSpecs(t, "Controller Suite")
 }
 
+func BoolPtr(b bool) *bool {
+	return &b
+}
+
 var _ = BeforeSuite(func() {
 	logf.SetLogger(zap.New(zap.UseDevMode(true), zap.WriteTo(GinkgoWriter)))
 
@@ -64,6 +69,8 @@ var _ = BeforeSuite(func() {
 		CRDDirectoryPaths:     []string{filepath.Join("..", "..", "config", "crd", "bases")},
 		ErrorIfCRDPathMissing: true,
 	}
+
+	testEnv.UseExistingCluster = BoolPtr(true)
 
 	var err error
 	done := make(chan interface{})
@@ -75,6 +82,7 @@ var _ = BeforeSuite(func() {
 	Eventually(done).WithTimeout(time.Minute).Should(BeClosed())
 	Expect(err).ToNot(HaveOccurred())
 	Expect(cfg).ToNot(BeNil())
+	fmt.Println("is here")
 
 	err = kedav1alpha1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())

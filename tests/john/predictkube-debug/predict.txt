@@ -1,0 +1,156 @@
+john@johnjiangs-MacBook-Pro ~ % k describe scaledobject -n intersoul
+Name:         aggregation-service-scaler
+Namespace:    intersoul
+Labels:       scaledobject.keda.sh/name=aggregation-service-scaler
+Annotations:  <none>
+API Version:  keda.sh/v1alpha1
+Kind:         ScaledObject
+Metadata:
+  Creation Timestamp:  2024-10-31T04:53:16Z
+  Finalizers:
+    finalizer.keda.sh
+  Generation:        9
+  Resource Version:  56806236
+  UID:               afb04414-d53e-49ef-b063-5ea50b0724ca
+Spec:
+  Cooldown Period:    10
+  Max Replica Count:  3
+  Min Replica Count:  1
+  Polling Interval:   3
+  Scale Target Ref:
+    API Version:  apps/v1
+    Kind:         Deployment
+    Name:         aggregation-service
+  Triggers:
+    Authentication Ref:
+      Name:  keda-trigger-auth-predictkube-secret
+    Metadata:
+      History Time Window:  3d
+      Predict Horizon:      2h
+      Prometheus Address:   http://kube-prometheus-stack-prometheus.monitoring:9090
+      Query:                sum(irate(kong_http_requests_total[2m]))
+      Query Step:           2m
+      Threshold:            50.50
+    Type:                   predictkube
+    Metadata:
+      Activation Threshold:  5.5
+      Query:                 sum(irate(kong_http_requests_total[2m]))
+      Server Address:        http://kube-prometheus-stack-prometheus.monitoring:9090
+      Threshold:             50.50
+    Type:                    prometheus
+Status:
+  Conditions:
+    Message:  ScaledObject is defined correctly and is ready for scaling
+    Reason:   ScaledObjectReady
+    Status:   True
+    Type:     Ready
+    Message:  Scaling is not performed because triggers are not active
+    Reason:   ScalerNotActive
+    Status:   False
+    Type:     Active
+    Message:  No fallbacks are active on this scaled object
+    Reason:   NoFallbackFound
+    Status:   False
+    Type:     Fallback
+    Status:   Unknown
+    Type:     Paused
+  External Metric Names:
+    s0-predictkube-predictkube_metric
+    s1-prometheus
+  Health:
+    s0-predictkube-predictkube_metric:
+      Number Of Failures:  0
+      Status:              Happy
+    s1-prometheus:
+      Number Of Failures:  0
+      Status:              Happy
+  Hpa Name:                keda-hpa-aggregation-service-scaler
+  Last Active Time:        2024-12-07T06:32:57Z
+  Original Replica Count:  1
+  Scale Target GVKR:
+    Group:            apps
+    Kind:             Deployment
+    Resource:         deployments
+    Version:          v1
+  Scale Target Kind:  apps/v1.Deployment
+Events:
+  Type     Reason              Age                  From           Message
+  ----     ------              ----                 ----           -------
+  Warning  KEDAScalerFailed    37m (x89 over 10d)   keda-operator  rpc error: code = Canceled desc = grpc: the client connection is closing
+  Warning  KEDAScalerFailed    16m (x4 over 8d)     keda-operator  error create Prometheus client and API objects: context canceled
+  Normal   KEDAScalersStarted  16m (x106 over 10d)  keda-operator  Scaler predictkube is built.
+  Normal   KEDAScalersStarted  16m (x9 over 4h36m)  keda-operator  Scaler prometheus is built.
+
+
+
+
+  Name:         aggregation-service-scaler
+Namespace:    intersoul
+Labels:       scaledobject.keda.sh/name=aggregation-service-scaler
+Annotations:  <none>
+API Version:  keda.sh/v1alpha1
+Kind:         ScaledObject
+Metadata:
+  Creation Timestamp:  2024-10-31T04:53:16Z
+  Finalizers:
+    finalizer.keda.sh
+  Generation:        10
+  Resource Version:  56814001
+  UID:               afb04414-d53e-49ef-b063-5ea50b0724ca
+Spec:
+  Cooldown Period:    10
+  Max Replica Count:  3
+  Min Replica Count:  1
+  Polling Interval:   3
+  Scale Target Ref:
+    API Version:  apps/v1
+    Kind:         Deployment
+    Name:         aggregation-service
+  Triggers:
+    Metadata:
+      Activation Threshold:  5.5
+      Query:                 sum(irate(kong_http_requests_total[2m]))
+      Server Address:        http://kube-prometheus-stack-prometheus.monitoring:9090
+      Threshold:             50.50
+    Type:                    prometheus
+Status:
+  Conditions:
+    Message:  ScaledObject is defined correctly and is ready for scaling
+    Reason:   ScaledObjectReady
+    Status:   True
+    Type:     Ready
+    Message:  Scaling is not performed because triggers are not active
+    Reason:   ScalerNotActive
+    Status:   False
+    Type:     Active
+    Message:  No fallbacks are active on this scaled object
+    Reason:   NoFallbackFound
+    Status:   False
+    Type:     Fallback
+    Status:   Unknown
+    Type:     Paused
+  External Metric Names:
+    s0-prometheus
+  Health:
+    s0-prometheus:
+      Number Of Failures:  0
+      Status:              Happy
+  Hpa Name:                keda-hpa-aggregation-service-scaler
+  Last Active Time:        2024-12-07T06:50:16Z
+  Original Replica Count:  1
+  Scale Target GVKR:
+    Group:            apps
+    Kind:             Deployment
+    Resource:         deployments
+    Version:          v1
+  Scale Target Kind:  apps/v1.Deployment
+Events:
+  Type     Reason              Age                     From           Message
+  ----     ------              ----                    ----           -------
+  Warning  KEDAScalerFailed    55m (x89 over 10d)      keda-operator  rpc error: code = Canceled desc = grpc: the client connection is closing
+  Warning  KEDAScalerFailed    34m (x4 over 8d)        keda-operator  error create Prometheus client and API objects: context canceled
+  Normal   KEDAScalersStarted  33m (x106 over 10d)     keda-operator  Scaler predictkube is built.
+  Warning  KEDAScalerFailed    5m48s (x5 over 8d)      keda-operator  scaler with id 0 not found, len = 0, cache has been probably already invalidated
+  Normal   KEDAScalersStarted  5m48s (x11 over 4h53m)  keda-operator  Scaler prometheus is built.
+  Normal   ScaledObjectReady   5m48s (x2 over 4h53m)   keda-operator  ScaledObject is ready for scaling
+john@johnjiangs-MacBook-Pro ~ % 

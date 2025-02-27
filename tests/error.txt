@@ -1,0 +1,2 @@
+bash: pwd: -d: invalid option
+pwd: usage: pwd [-LP]

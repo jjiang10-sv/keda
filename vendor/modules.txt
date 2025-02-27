@@ -895,6 +895,9 @@ github.com/influxdata/influxdb-client-go/v2/log
 # github.com/influxdata/line-protocol v0.0.0-20210922203350-b1ad95c89adf
 ## explicit; go 1.13
 github.com/influxdata/line-protocol
+# github.com/influxdata/tdigest v0.0.1
+## explicit; go 1.13
+github.com/influxdata/tdigest
 # github.com/jackc/pgpassfile v1.0.0
 ## explicit; go 1.12
 github.com/jackc/pgpassfile
@@ -1015,6 +1018,7 @@ github.com/leodido/go-urn
 github.com/leodido/go-urn/scim/schema
 # github.com/mailru/easyjson v0.7.7
 ## explicit; go 1.12
+github.com/mailru/easyjson
 github.com/mailru/easyjson/buffer
 github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
@@ -1235,6 +1239,9 @@ github.com/rivo/uniseg
 # github.com/robfig/cron/v3 v3.0.1
 ## explicit; go 1.12
 github.com/robfig/cron/v3
+# github.com/rs/dnscache v0.0.0-20211102005908-e0241e321417
+## explicit; go 1.12
+github.com/rs/dnscache
 # github.com/ryanuber/go-glob v1.0.0
 ## explicit
 github.com/ryanuber/go-glob
@@ -1340,6 +1347,9 @@ github.com/tidwall/pretty
 # github.com/tomnomnom/linkheader v0.0.0-20180905144013-02ca5825eb80
 ## explicit
 github.com/tomnomnom/linkheader
+# github.com/tsenart/vegeta/v12 v12.11.1
+## explicit; go 1.20
+github.com/tsenart/vegeta/v12/lib
 # github.com/ulikunitz/unixtime v0.1.2
 ## explicit; go 1.13
 github.com/ulikunitz/unixtime

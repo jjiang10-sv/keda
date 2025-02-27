@@ -1,13 +1,13 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: nginx-deployment
+  name: sampletest1-deployment
   namespace: default
 spec:
   scaleTargetRef:
     apiVersion:    apps/v1        # Optional. Default: apps/v1
     kind:          Deployment     # Optional. Default: Deployment
-    name:          nginx      # Mandatory. Must be in the same namespace as the ScaledObject
+    name:          sampletest1      # Mandatory. Must be in the same namespace as the ScaledObject
   pollingInterval:  5                    # Optional. Default: 5 seconds
   cooldownPeriod:   300                  # Optional. Default: 300 seconds
   minReplicaCount:  0                   # Optional. Default: 0
@@ -18,7 +18,7 @@ spec:
   advanced:                                        # Optional. Section to specify advanced options
     restoreToOriginalReplicaCount: true     # Optional. Default: false
     horizontalPodAutoscalerConfig:          # Optional. Section to specify HPA related options
-      name: keda-hpa-nginx       # Optional. Default: keda-hpa-{scaled-object-name}
+      name: keda-hpa-sampletest1       # Optional. Default: keda-hpa-{scaled-object-name}
       behavior:                             # Optional. Use to modify HPA's scaling behavior
         scaleDown:
           stabilizationWindowSeconds: 600
@@ -27,10 +27,51 @@ spec:
               value: 100
               periodSeconds: 15
   triggers:
-  - type: cron
+  - type: prometheus
     metadata:
-      # Required
-      timezone: Asia/Kolkata  # The acceptable values would be a value from the IANA Time Zone Database.
-      start: 30 * * * *       # Every hour on the 30th minute
-      end: 45 * * * *         # Every hour on the 45th minute
-      desiredReplicas: "5"
+      # Required fields:
+      #serverAddress: http://prometheus-operated:9090
+      serverAddress: http://kube-prom-stack-kube-prome-prometheus.observability:9090
+      query: sum(rate(http_requests_total{deployment="sampletest1"}[2m])) # Note: query must return a vector/scalar single element response
+      threshold: '100.50'
+      activationThreshold: '5.5'
+      # Optional fields:
+      #namespace: example-namespace  # for namespaced queries, eg. Thanos
+      customHeaders: X-Client-Id=cid,X-Tenant-Id=tid,X-Organization-Id=oid # Optional. Custom headers to include in query. In case of auth header, use the custom authentication or relevant authModes.
+      ignoreNullValues: "false" # Default is `true`, which means ignoring the empty value list from Prometheus. Set to `false` the scaler will return error when Prometheus target is lost
+      queryParameters: key-1=value-1,key-2=value-2
+      unsafeSsl: "false" #  Default is `false`, Used for skipping certificate check when having self-signed certs for Prometheus endpoint    
+
+      # serverAddress: http://prometheus-operated.test.svc.cluster.local  # Prometheus service address
+      # metricName: http_requests_total  # The Prometheus metric to monitor
+      # threshold: '100'  # The threshold for scaling
+      # query: |
+      #   sum(rate(http_requests_total[5m])) by (job)  # Example query to get requests per second
+  # - type: cron
+  #   metadata:
+  #     # Required
+  #     timezone: Asia/Kolkata  # The acceptable values would be a value from the IANA Time Zone Database.
+  #     start: 30 * * * *       # Every hour on the 30th minute
+  #     end: 45 * * * *         # Every hour on the 45th minute
+  #     desiredReplicas: "5"
+
+# apiVersion: keda.sh/v1alpha1
+# kind: ScaledObject
+# metadata:
+#   name: prometheus-scaledobject
+#   namespace: default
+# spec:
+#   scaleTargetRef:
+#     name: your-deployment-name  # The deployment KEDA should scale
+#   pollingInterval: 30  # Poll Prometheus every 30 seconds
+#   cooldownPeriod:  300  # Scale down after 5 minutes
+#   minReplicaCount: 1  # Minimum number of replicas
+#   maxReplicaCount: 10  # Maximum number of replicas
+#   triggers:
+#   - type: prometheus
+#     metadata:
+#       serverAddress: http://prometheus-server.default.svc.cluster.local  # Prometheus service address
+#       metricName: http_requests_total  # The Prometheus metric to monitor
+#       threshold: '100'  # The threshold for scaling
+#       query: |
+#         sum(rate(http_requests_total[5m])) by (job)  # Example query to get requests per second

@@ -33,3 +33,5 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "KEDA source code built successfully in the VM."
+
+# kubectl create secret generic predictkube-secrets --from-file=apiKey=predictkube-api-key.txt --namespace keda
