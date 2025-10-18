@@ -1,2 +1,16 @@
 hello world
 hi
+
+
+echo "GET https://dev.intersoul.io/docs" | vegeta attack -duration=10s -rate=50 | vegeta encode > results.bin
+vegeta report -type=json results.bin > report.json
+vegeta report -type=text results.bin > report.txt
+ vegeta encode < results.bin > results.json
+jq '.[] | {url: .url, headers: .headers}' report.json
+
+
+exec kubectl exec -i -t -n keda keda-operator-b479b44bd-pbbpt -c keda-operator -- sh -c "clear; (bash ||
+ ash || sh)"
+error: Internal error occurred: I
+
+client connection

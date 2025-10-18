@@ -1,0 +1,42 @@
+mid-term:
+
+without scaling: 
+reactive -- set the threshold, graduate increasing 
+
+
+04-01
+
+Able to scale in k8s but not in local
+k8s : 
+AbleToScale     True    ReadyForNewScale  recommended size matches current size
+ScalingActive   True    ValidMetricFound  the HPA was able to successfully calculate a replica count from external metric s0-prometheus(&LabelSelector{MatchLabels:map[string]string{scaledobject.keda.sh/name: scalingtest-scaler,},MatchExpressions:[]LabelSelectorRequirement{},})
+
+local :
+AbleToScale    True    SucceededGetScale        the HPA controller was able to get the target's current scale
+  ScalingActive  False   FailedGetExternalMetric  the HPA was unable to compute the replica count: unable to get external metric keda/s0-prometheus/&LabelSelector{MatchLabels:map[string]string{scaledobject.keda.sh/name: scalingtest-scaler,},MatchExpressions:[]LabelSelectorRequirement{},}: unable to fetch metrics from external metrics API: the server was unable to return a response in the time allotted, but may still be processing the request (get s0-prometheus.external.metrics.k8s.io)
+
+It seems that ScaledObject not using the externalMetric.Target
+GetMetricSpecForScalingForScaler => GetMetricSpecForScaling
+
+externalMetric := &v2.ExternalMetricSource{
+		Metric: v2.MetricIdentifier{
+			Name: GenerateMetricNameWithIndex(s.metadata.triggerIndex, metricName),
+		},
+		Target: GetMetricTargetMili(s.metricType, s.metadata.threshold),
+	}
+
+https://medium.com/@neeltom92/servicemonitor-integration-for-a-golang-app-for-monitoring-via-prometheus-5cec95ac318c
+
+  label_replace(
+    sum(irate(testservice_http_requests_total{status="304"}[5m])),
+    "metric", "testservice_304", "", ""
+  )
+  or
+  label_replace(
+    sum(irate(another_metric_http_requests_total{status="200"}[5m])),
+    "metric", "another_200", "", ""
+  )
+
+  sum by (status) (irate(testservice_http_requests_total{status=~"200|304"}[5m]))
+
+  kubectl cp keda/scalingtest-5d4c8f8699-bp6d5:/tmp/service.log ./service.log

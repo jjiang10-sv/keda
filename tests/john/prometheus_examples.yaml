@@ -1,0 +1,138 @@
+# Example KEDA ScaledObject configurations with different Prometheus queries
+
+---
+# Example 1: Scale based on HTTP 200 requests
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: testservice-http200-scaler
+  namespace: keda
+spec:
+  scaleTargetRef:
+    name: scalingtest
+  pollingInterval: 3
+  cooldownPeriod: 3
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://kube-prometheus-stack-prometheus.monitoring:9090
+      query: sum(irate(testservice_http_requests_total{status="200"}[5m]))
+      threshold: '2.0'
+      activationThreshold: '1.0'
+
+---
+# Example 2: Scale based on HTTP 304 requests
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: testservice-http304-scaler
+  namespace: keda
+spec:
+  scaleTargetRef:
+    name: scalingtest
+  pollingInterval: 3
+  cooldownPeriod: 3
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://kube-prometheus-stack-prometheus.monitoring:9090
+      query: sum(irate(testservice_http_requests_total{status="304"}[5m]))
+      threshold: '1.5'
+      activationThreshold: '0.5'
+
+---
+# Example 3: Scale based on combined success requests (200 + 304)
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: testservice-success-scaler
+  namespace: keda
+spec:
+  scaleTargetRef:
+    name: scalingtest
+  pollingInterval: 3
+  cooldownPeriod: 3
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://kube-prometheus-stack-prometheus.monitoring:9090
+      query: sum(irate(testservice_http_requests_total{status=~"200|304"}[5m]))
+      threshold: '3.0'
+      activationThreshold: '1.5'
+
+---
+# Example 4: Scale based on memory usage
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: testservice-memory-scaler
+  namespace: keda
+spec:
+  scaleTargetRef:
+    name: scalingtest
+  pollingInterval: 3
+  cooldownPeriod: 3
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://kube-prometheus-stack-prometheus.monitoring:9090
+      query: memory_usage_bytes
+      threshold: '100000000'  # 100MB in bytes
+      activationThreshold: '50000000'  # 50MB in bytes
+
+---
+# Example 5: Scale based on error rate
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: testservice-error-scaler
+  namespace: keda
+spec:
+  scaleTargetRef:
+    name: scalingtest
+  pollingInterval: 3
+  cooldownPeriod: 3
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://kube-prometheus-stack-prometheus.monitoring:9090
+      query: sum(irate(testservice_http_requests_total{status=~"4..|5.."}[5m]))
+      threshold: '0.5'  # Scale up if error rate > 0.5 req/sec
+      activationThreshold: '0.1'
+
+---
+# Example 6: Advanced configuration with optional fields
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: testservice-advanced-scaler
+  namespace: keda
+spec:
+  scaleTargetRef:
+    name: scalingtest
+  pollingInterval: 3
+  cooldownPeriod: 3
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://kube-prometheus-stack-prometheus.monitoring:9090
+      query: sum(irate(testservice_http_requests_total{status="200"}[5m]))
+      threshold: '2.0'
+      activationThreshold: '1.0'
+      queryStep: "30s"          # Query step duration
+      ignoreZeroValues: "true"  # Ignore zero values
+      metricName: "http_requests_rate"  # Custom metric name
+
+

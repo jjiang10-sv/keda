@@ -306,6 +306,7 @@ func (s *prometheusScaler) GetMetricsAndActivity(ctx context.Context, metricName
 		s.logger.Error(err, "error executing prometheus query")
 		return []external_metrics.ExternalMetricValue{}, false, err
 	}
+	println("prometheusScaler get val ", val)
 
 	metric := GenerateMetricInMili(metricName, val)
 

@@ -208,8 +208,7 @@ func (s *PredictKubeScaler) GetMetricsAndActivity(ctx context.Context, metricNam
 		s.logger.V(1).Info("empty response after predict request")
 		return []external_metrics.ExternalMetricValue{}, false, nil
 	}
-	
-	
+
 	s.logger.V(1).Info(fmt.Sprintf("predict value is: %f", value))
 
 	metric := GenerateMetricInMili(metricName, value)
@@ -229,6 +228,8 @@ func (s *PredictKubeScaler) doPredictRequest(ctx context.Context) (float64, floa
 	})
 
 	if err != nil {
+
+		s.logger.Error(err, "error GetPredictMetric")
 		return 0, 0, err
 	}
 
