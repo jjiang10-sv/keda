@@ -1,0 +1,47 @@
+# apiVersion: cilium.io/v2
+# kind: CiliumClusterwideNetworkPolicy
+# metadata:
+#   name: allow-keda-metrics-api-server-clusterwide
+# spec:
+#   endpointSelector:
+#     matchLabels:
+#       app.kubernetes.io/name: keda-operator-metrics-apiserver
+#       io.kubernetes.pod.namespace: keda   # Important for namespace
+#   ingress:
+#   - fromEndpoints:
+#     - matchLabels:
+#         k8s-app: kube-apiserver
+#         io.kubernetes.pod.namespace: kube-system  # MUST be inside matchLabels
+#     toPorts:
+#     - ports:
+#       - port: "6443"
+#         protocol: TCP
+
+# ---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-k8s-api
+spec:
+  endpointSelector: {}      # applies to all pods
+  egress:
+  - toEntities:
+    - kube-apiserver        # special Cilium entity for API server
+# ---
+# apiVersion: cilium.io/v2
+# kind: CiliumClusterwideNetworkPolicy
+# metadata:
+#   name: allow-keda-to-apiserver
+# spec:
+#   description: "Allow KEDA components to access Kubernetes API server"
+#   endpointSelector:
+#     matchLabels:
+#       # Applies to both keda-operator and keda-operator-metrics-apiserver pods
+#       app.kubernetes.io/part-of: keda-operator
+#   egress:
+#   - toEntities:
+#     - kube-apiserver
+#   - toPorts:
+#     - ports:
+#       - port: "443"
+#         protocol: TCP

@@ -18,6 +18,9 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"os/user"
+	"path/filepath"
 	"sync"
 	"time"
 
@@ -35,6 +38,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	openapicommon "k8s.io/kube-openapi/pkg/common"
 
+	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/apiserver"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/cmd/options"
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/dynamicmapper"
@@ -169,14 +173,36 @@ func (b *AdapterBase) ClientConfig() (*rest.Config, error) {
 	return b.clientConfig, nil
 }
 
+func loadConfigWithContext(apiServerURL string, loader clientcmd.ClientConfigLoader, context string) (*rest.Config, error) {
+	return clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
+		loader,
+		&clientcmd.ConfigOverrides{
+			ClusterInfo: clientcmdapi.Cluster{
+				Server: apiServerURL,
+			},
+			CurrentContext: context,
+		}).ClientConfig()
+}
+
 // DiscoveryClient returns a DiscoveryInterface suitable to for discovering resources
 // available on the cluster.
 func (b *AdapterBase) DiscoveryClient() (discovery.DiscoveryInterface, error) {
 	if b.discoveryClient == nil {
-		clientConfig, err := b.ClientConfig()
-		if err != nil {
-			return nil, err
+		loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
+		if _, ok := os.LookupEnv("HOME"); !ok {
+			u, err := user.Current()
+			if err != nil {
+				return nil, fmt.Errorf("could not get current user: %w", err)
+			}
+			loadingRules.Precedence = append(loadingRules.Precedence, filepath.Join(u.HomeDir, clientcmd.RecommendedHomeDir, clientcmd.RecommendedFileName))
 		}
+
+		clientConfig, _ := loadConfigWithContext("", loadingRules, "")
+
+		// clientConfig, err := b.ClientConfig()
+		// if err != nil {
+		// 	return nil, err
+		// }
 		discoveryClient, err := discovery.NewDiscoveryClientForConfig(clientConfig)
 		if err != nil {
 			return nil, fmt.Errorf("unable to construct discovery client for dynamic client: %v", err)

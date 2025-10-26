@@ -226,7 +226,8 @@ func RunMetricsServer(ctx context.Context, stopCh <-chan struct{}) {
 // generateDefaultMetricsServiceAddr generates default Metrics Service gRPC Server address based on the current Namespace.
 // By default the Metrics Service gRPC Server runs in the same namespace on the keda-operator pod.
 func generateDefaultMetricsServiceAddr() string {
-	return fmt.Sprintf("keda-operator.%s.svc.cluster.local:9666", kedautil.GetPodNamespace())
+	return "127.0.0.1:9666"
+	//return fmt.Sprintf("keda-operator.%s.svc.cluster.local:9666", kedautil.GetPodNamespace())
 }
 
 // printWelcomeMsg prints welcome message during the start of the adater
@@ -263,7 +264,8 @@ func main() {
 
 	cmd.Flags().StringVar(&cmd.Message, "msg", "starting adapter...", "startup message")
 	cmd.Flags().AddGoFlagSet(flag.CommandLine) // make sure we get the klog flags
-	cmd.Flags().IntVar(&metricsAPIServerPort, "port", 8080, "Set the port for the metrics API server")
+	// 8080
+	cmd.Flags().IntVar(&metricsAPIServerPort, "port", 8079, "Set the port for the metrics API server")
 	cmd.Flags().StringVar(&metricsServiceAddr, "metrics-service-address", generateDefaultMetricsServiceAddr(), "The address of the GRPC Metrics Service Server.")
 	cmd.Flags().StringVar(&metricsServiceGRPCAuthority, "metrics-service-grpc-authority", "", "Host Authority override for the Metrics Service if the Host Authority is not the same as the address used for the GRPC Metrics Service Server.")
 	cmd.Flags().StringVar(&profilingAddr, "profiling-bind-address", "", "The address the profiling would be exposed on.")

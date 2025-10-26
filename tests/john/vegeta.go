@@ -27,7 +27,7 @@ func main() {
 
 	freq := 20
 	// 5*10*60
-	duration := time.Duration(10) * time.Second
+	duration := time.Duration(60) * time.Second
 
 	rate := vegeta.Rate{Freq: freq, Per: time.Second}
 
@@ -42,7 +42,8 @@ func main() {
 	attacker := vegeta.NewAttacker()
 
 	var metrics vegeta.Metrics
-	for res := range attacker.Attack(targeter, rate, duration, "Big Bang!") {
+	// Big Bang!
+	for res := range attacker.Attack(targeter, rate, duration, "DDOS") {
 		// for k, v := range res.Headers {
 		// 	fmt.Printf("%s: %s\n", k, v)
 		// }

@@ -55,15 +55,15 @@ func NewProvider(ctx context.Context, adapterLogger logr.Logger, client client.C
 	logger = adapterLogger.WithName("provider")
 	logger.Info("starting")
 
-	go func() {
-		if !grpcClient.WaitForConnectionReady(ctx, logger) {
-			grpcClientConnected = false
-			logger.Error(fmt.Errorf("timeout while waiting to establish gRPC connection to KEDA Metrics Service server"), "timeout", "server", grpcClient.GetServerURL())
-		} else if !grpcClientConnected {
-			grpcClientConnected = true
-			logger.Info("Connection to KEDA Metrics Service gRPC server has been successfully established", "server", grpcClient.GetServerURL())
-		}
-	}()
+	// go func() {
+	// 	if !grpcClient.WaitForConnectionReady(ctx, logger) {
+	// 		grpcClientConnected = false
+	// 		logger.Error(fmt.Errorf("timeout while waiting to establish gRPC connection to KEDA Metrics Service server"), "timeout", "server", grpcClient.GetServerURL())
+	// 	} else if !grpcClientConnected {
+	// 		grpcClientConnected = true
+	// 		logger.Info("Connection to KEDA Metrics Service gRPC server has been successfully established", "server", grpcClient.GetServerURL())
+	// 	}
+	// }()
 
 	return provider
 }

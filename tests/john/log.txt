@@ -1,7 +1,36 @@
+cilium and keda as one integration slide
+
+reactive/preactive scaling
+
+cilium network policy :  show how the policy :
+
+accept legimate requests
+coparate DDOS: 
+  nasa datasets : 
+    extact traffic patterns.
+    create a simple mode and use the dataset to simulate the traffic
+
+
+# Example using a debug pod with grpcurl
+kubectl debug -it -n keda keda-operator-metrics-apiserver-74bcc6f665-qxx66 \
+  --image=fullstorydev/grpcurl:latest \
+  --target=keda-operator-metrics-apiserver
+
+# Once attached to the debug pod, you can run grpcurl commands:
+# Use grpcurl to list the services provided by the KEDA operator
+grpcurl keda-operator.keda.svc.cluster.local:9666 list
+
+# Or to inspect a specific service
+grpcurl keda-operator.keda.svc.cluster.local:9666 describe keda.ExternalMetric
+
+
 mid-term:
 
 without scaling: 
 reactive -- set the threshold, graduate increasing 
+
+prom-operator
+admin
 
 
 04-01
