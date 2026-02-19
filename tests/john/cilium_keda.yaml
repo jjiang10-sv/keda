@@ -1,0 +1,12 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-all-to-keda-metrics
+  namespace: keda
+spec:
+  endpointSelector:
+    matchLabels:
+      app: keda-operator-metrics-apiserver
+  ingress:
+  - fromEntities:
+      - all
