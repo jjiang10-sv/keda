@@ -178,6 +178,14 @@ func CreateHTTPRoundTripper(roundTripperType TransportType, auth *AuthMeta, conf
 			return nil, fmt.Errorf("error creating the TLS config: %w", err)
 		}
 	}
+	unsafeSsl1 := false
+	tlsConfig1 := kedautil.CreateTLSClientConfig(unsafeSsl1)
+	if auth != nil && (auth.CA != "" || auth.EnableTLS) {
+		tlsConfig1, err = NewTLSConfig(auth, unsafeSsl1)
+		if err != nil || tlsConfig1 == nil {
+			return nil, fmt.Errorf("error creating the TLS config: %w", err)
+		}
+	}
 
 	switch roundTripperType {
 	case NetHTTP:

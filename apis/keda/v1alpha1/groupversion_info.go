@@ -31,7 +31,12 @@ var (
 	// SchemeGroupVersion is group version used to register these objects
 	// added for generated clientset
 	SchemeGroupVersion = GroupVersion
-
+	//  Is it global or local? It is a package-level global variable. Because it is declared inside the var (...) block at the root level of
+	// groupversion_info.go
+	//  (and starts with an uppercase letter), it is globally accessible to every single file inside the v1alpha1 package, and even to other packages that import it (like main.go).
+	// 2. Is it a pointer to the global builder that registers all types? Yes, exactly. It is a pointer (&) to a completely new scheme.Builder struct that is created specifically for this API group (keda.sh/v1alpha1).
+	// Because SchemeBuilder is a global pointer, any other file inside the v1alpha1 folder (like scaledobject_types.go, scaledjob_types.go, etc.) can access it. During the Go initialization phase (init()), those other files all point to this exact same SchemeBuilder and use it to register their specific Go structs (using SchemeBuilder.Register())
+	// Once all the files have finished registering their local types into this builder, the builder contains the complete list of all types for the v1alpha1 API, ready to be handed off to the main operator startup sequence!
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
 
